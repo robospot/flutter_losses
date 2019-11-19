@@ -19,16 +19,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is AppStarted) {
       try {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
-        final name = await _userRepository.getUser();
-        yield Authenticated(name);
-      } else {
+        final isSignedIn = await _userRepository.isSignedIn();
+        if (isSignedIn) {
+          final name = await _userRepository.getUser();
+          yield Authenticated(name);
+        } else {
+          yield Unauthenticated();
+        }
+      } catch (_) {
         yield Unauthenticated();
       }
-    } catch (_) {
-      yield Unauthenticated();
     }
+    if (event is LoggedIn) {
+      yield Authenticated(await _userRepository.getUser());
+    }
+    if (event is LoggedOut) {
+      yield Unauthenticated();
+      _userRepository.signOut();
     }
   }
 }

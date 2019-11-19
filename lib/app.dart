@@ -11,7 +11,10 @@ import 'screens/splash_screen.dart';
 class App extends StatelessWidget {
   final UserRepository _userRepository;
 
-  const App({Key key}) : super(key: key);
+  const App({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
