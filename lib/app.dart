@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/auth/bloc.dart';
 import 'helpers/user_repository.dart';
+import 'screens/home_screen.dart';
+import 'screens/login/login_screen.dart';
 import 'screens/login/onboarding_screen.dart';
 import 'screens/login/phone_auth_screen.dart';
 import 'screens/splash_screen.dart';
@@ -25,11 +27,14 @@ class App extends StatelessWidget {
         routes: {
           '/': (context) => BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
+                     if (state is Uninitialized) {
+            return SplashScreen();
+          }
                   if (state is Unauthenticated) {
-                    return Onboarding();
+                   return LoginScreen(userRepository: _userRepository);
                   }
                   if (state is Authenticated) {
-                    return Onboarding();
+                    return Home();
                   }
                   return SplashScreen();
                 },
