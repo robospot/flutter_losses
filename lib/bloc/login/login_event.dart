@@ -20,6 +20,18 @@ class EmailChanged extends LoginEvent {
   String toString() => 'EmailChanged { email :$email }';
 }
 
+class PhoneChanged extends LoginEvent {
+  final String phone;
+
+  const PhoneChanged({@required this.phone});
+
+  @override
+  List<Object> get props => [phone];
+
+  @override
+  String toString() => 'PhoneChanged { phone :$phone }';
+}
+
 class PasswordChanged extends LoginEvent {
   final String password;
 
@@ -67,5 +79,39 @@ class LoginWithCredentialsPressed extends LoginEvent {
   @override
   String toString() {
     return 'LoginWithCredentialsPressed { email: $email, password: $password }';
+  }
+}
+
+class VerifyPhoneNumber extends LoginEvent {
+  final String phone;
+
+  const VerifyPhoneNumber({
+    @required this.phone,
+  });
+
+  @override
+  List<Object> get props => [phone];
+
+  @override
+  String toString() {
+    return 'VerifyPhoneNumber { phone: $phone, }';
+  }
+}
+
+class LoginWithPhone extends LoginEvent {
+  
+  final String sms;
+
+  const LoginWithPhone({
+  
+    @required this.sms,
+  });
+
+  @override
+  List<Object> get props => [sms];
+
+  @override
+  String toString() {
+    return 'LoginWithPhone {  sms: $sms }';
   }
 }

@@ -38,7 +38,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is EmailChanged) {
       yield* _mapEmailChangedToState(event.email);
-    } else if (event is PasswordChanged) {
+    } 
+    else  if (event is PhoneChanged) {
+      yield* _mapPhoneChangedToState(event.phone);
+    } 
+    else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password);
     } else if (event is LoginWithGooglePressed) {
       yield* _mapLoginWithGooglePressedToState();
@@ -48,11 +52,32 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         password: event.password,
       );
     }
+    else if (event is VerifyPhoneNumber) {
+      yield* _mapVerifyPhoneNumberToState(
+        phone: event.phone,
+       
+      );
+    }
+     else if (event is LoginWithPhone) {
+      yield* _mapLoginWithPhoneToState(
+        
+        sms: event.sms
+       
+      );
+    }
   }
 
   Stream<LoginState> _mapEmailChangedToState(String email) async* {
     yield state.update(
       isEmailValid: Validators.isValidEmail(email),
+      
+    );
+  }
+
+   Stream<LoginState> _mapPhoneChangedToState(String phone) async* {
+    yield state.update(
+      
+      isPhoneValid: Validators.isValidPhone(phone),
     );
   }
 
@@ -78,6 +103,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginState.loading();
     try {
       await _userRepository.signInWithCredentials(email, password);
+      yield LoginState.success();
+    } catch (_) {
+      yield LoginState.failure();
+    }
+  }
+
+  Stream<LoginState> _mapVerifyPhoneNumberToState({
+    String phone,
+    
+  }) async* {
+   // yield LoginState.loading();
+   // try {
+      await _userRepository.verifyPhoneNumber(phone);
+    //  yield LoginState.success();
+    // } catch (_) {
+    //   yield LoginState.failure();
+    // }
+  }
+
+   Stream<LoginState> _mapLoginWithPhoneToState({
+    String phone,
+    String sms
+    
+  }) async* {
+    yield LoginState.loading();
+    try {
+      await _userRepository.signInWithPhoneNumber(sms);
       yield LoginState.success();
     } catch (_) {
       yield LoginState.failure();

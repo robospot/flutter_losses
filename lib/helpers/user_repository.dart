@@ -35,8 +35,9 @@ class UserRepository {
       password: password,
     );
   }
+
   String _verificationId;
-  void _verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
       _firebaseAuth.signInWithCredential(phoneAuthCredential);
@@ -70,7 +71,7 @@ class UserRepository {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
-  void _signInWithPhoneNumber(String smsCode) async {
+  Future<FirebaseUser> signInWithPhoneNumber(String smsCode) async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: _verificationId,
       smsCode: smsCode,
@@ -85,6 +86,7 @@ class UserRepository {
     } else {
       print('Sign in failed');
     }
+    return currentUser;
   }
 
   Future<void> signOut() async {

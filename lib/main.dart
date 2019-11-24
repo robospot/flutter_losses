@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_losses/bloc/login/login_bloc.dart';
 import 'app.dart';
 import 'bloc/auth/bloc.dart';
 import 'helpers/user_repository.dart';
@@ -16,7 +17,11 @@ void main() {
       BlocProvider<AuthBloc>(
         builder: (BuildContext context) =>
             AuthBloc(userRepository: userRepository)..add(AppStarted()),
-      )
+      ),
+        BlocProvider<LoginBloc>(
+        builder: (BuildContext context) =>
+            LoginBloc(userRepository: userRepository)),
+      
     ],
     child: App(userRepository: userRepository),
   ));

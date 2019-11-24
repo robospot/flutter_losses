@@ -1,35 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:flutter_losses/bloc/auth/bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
 
-import 'create_account_button.dart';
-import 'google_login_button.dart';
+import '../../bloc/auth/bloc.dart';
+import '../../helpers/user_repository.dart';
 import 'login_button.dart';
 
-class LoginForm extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  LoginForm({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
+class SignWithPhone extends StatefulWidget {
+  //final UserRepository _userRepository;
+  SignWithPhone({Key key})
+      :
+        // assert(userRepository != null),
+        //   _userRepository = userRepository,
         super(key: key);
 
-  State<LoginForm> createState() => _LoginFormState();
+  @override
+  _SignWithPhoneState createState() => _SignWithPhoneState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _phoneController = TextEditingController();
+class _SignWithPhoneState extends State<SignWithPhone> {
   final TextEditingController _passwordController = TextEditingController();
 
   LoginBloc _loginBloc;
 
-  UserRepository get _userRepository => widget._userRepository;
+  // UserRepository get _userRepository => widget._userRepository;
 
-  bool get isPopulated => _phoneController.text.isNotEmpty;
-  //&& _passwordController.text.isNotEmpty;
+  bool get isPopulated => _passwordController.text.isNotEmpty;
 
   bool isLoginButtonEnabled(LoginState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -39,13 +35,13 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<LoginBloc>(context);
-    _phoneController.addListener(_onPhoneChanged);
     _passwordController.addListener(_onPasswordChanged);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
+    return Scaffold(
+        body: BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.isFailure) {
           Scaffold.of(context)
@@ -88,24 +84,11 @@ class _LoginFormState extends State<LoginForm> {
                 children: <Widget>[
                   TextFormField(
                     keyboardType: TextInputType.phone,
-                    controller: _phoneController,
+                    controller: _passwordController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.phone),
                       labelText: 'Phone',
                     ),
-                    autovalidate: true,
-                    autocorrect: false,
-                    validator: (_) {
-                      return !state.isPhoneValid ? 'Invalid Phone' : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
-                    ),
-                    obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {
@@ -122,16 +105,8 @@ class _LoginFormState extends State<LoginForm> {
                               ? _onFormSubmitted
                               : null,
                         ),
-                        RaisedButton(
-                            child: Text("Log in"),
-                            onPressed: () => _loginBloc.add(
-                                  LoginWithPhone(
-                                      sms: _passwordController.text,
-                                   ),
-                                )),
-                    //    GoogleLoginButton(),
 
-                        //      CreateAccountButton(userRepository: _userRepository),
+                        //utton(userRepository: _userRepository),
                       ],
                     ),
                   ),
@@ -141,19 +116,15 @@ class _LoginFormState extends State<LoginForm> {
           );
         },
       ),
-    );
+    ));
   }
 
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _onPhoneChanged() {
+  void _onFormSubmitted() {
     _loginBloc.add(
-      PhoneChanged(phone: _phoneController.text),
+      LoginWithPhone(
+        sms: _passwordController.text,
+        //phone: _phoneController.text
+      ),
     );
   }
 
@@ -161,19 +132,5 @@ class _LoginFormState extends State<LoginForm> {
     _loginBloc.add(
       PasswordChanged(password: _passwordController.text),
     );
-  }
-
-  void _onFormSubmitted() {
-    _loginBloc.add(
-      VerifyPhoneNumber(phone: _phoneController.text),
-    );
-
-    // _loginBloc.add(
-
-    //   LoginWithCredentialsPressed(
-    //     email: _phoneController.text,
-    //     password: _passwordController.text,
-    //   ),
-    // );
   }
 }
