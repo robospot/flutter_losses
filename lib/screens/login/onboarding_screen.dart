@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_losses/widgets/buttons.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({Key key}) : super(key: key);
@@ -25,8 +26,9 @@ class Onboarding extends StatelessWidget {
                 'assets/losses.png',
               ),
             ),
-            RaisedButton(child: Text("Войти"), onPressed: () =>  Navigator.of(context)
-                            .pushNamed('/phone_auth') ,)
+            MainButton(
+                caption: "Войти",
+                onPressed: () => Navigator.of(context).pushNamed('/phone_auth'))
           ],
         )
       ],

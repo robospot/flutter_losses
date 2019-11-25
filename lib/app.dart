@@ -24,6 +24,12 @@ class App extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Losses',
+        theme: ThemeData(
+            buttonTheme: ButtonThemeData(
+                buttonColor: Color(0xFFFF7F5D),
+                textTheme: ButtonTextTheme.accent, ),
+                accentColor: Colors.white
+                ),
         initialRoute: '/',
         routes: {
           '/': (context) => BlocBuilder<AuthBloc, AuthState>(
@@ -33,7 +39,8 @@ class App extends StatelessWidget {
                   }
                   if (state is Unauthenticated) {
                     //     return LoginScreen(userRepository: _userRepository);
-                    return PhoneAuth(userRepository: _userRepository);
+                    return Onboarding();
+                    //PhoneAuth(userRepository: _userRepository);
                   }
                   if (state is Authenticated) {
                     return Home();
@@ -42,9 +49,23 @@ class App extends StatelessWidget {
                 },
               ),
           '/onboarding': (context) => Onboarding(),
-          '/signWithPhone': (context) => SignWithPhone(),
-
-          //    '/phone_auth': (context) => PhoneAuth(),
+          '/signWithPhone': (context) => BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is Uninitialized) {
+                    return SplashScreen();
+                  }
+                  if (state is Unauthenticated) {
+                    //     return LoginScreen(userRepository: _userRepository);
+                    return SignWithPhone();
+                  }
+                  if (state is Authenticated) {
+                    return Home();
+                  }
+                  return SplashScreen();
+                },
+              ),
+          '/phone_auth': (context) =>
+              PhoneAuth(userRepository: _userRepository),
         });
   }
 }

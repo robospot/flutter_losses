@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
+import 'package:flutter_losses/widgets/buttons.dart';
 
 import '../../bloc/auth/bloc.dart';
-import '../../helpers/user_repository.dart';
-import 'login_button.dart';
+
 
 class SignWithPhone extends StatefulWidget {
   //final UserRepository _userRepository;
@@ -86,13 +86,13 @@ class _SignWithPhoneState extends State<SignWithPhone> {
                     keyboardType: TextInputType.phone,
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.phone),
-                      labelText: 'Phone',
+                      icon: Icon(Icons.sms),
+                      labelText: 'sms',
                     ),
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
+                      return !state.isPasswordValid ? 'Invalid code' : null;
                     },
                   ),
                   Padding(
@@ -100,7 +100,7 @@ class _SignWithPhoneState extends State<SignWithPhone> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        LoginButton(
+                        MainButton(caption: "Войти",
                           onPressed: isLoginButtonEnabled(state)
                               ? _onFormSubmitted
                               : null,

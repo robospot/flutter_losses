@@ -1,14 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
-import 'package:flutter_losses/screens/login/sign_with_phone.dart';
+
+import 'package:flutter_losses/widgets/buttons.dart';
 
 import '../../bloc/auth/bloc.dart';
 import '../../helpers/user_repository.dart';
-import 'login_button.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class PhoneAuth extends StatefulWidget {
   final UserRepository _userRepository;
@@ -79,41 +76,58 @@ class _PhoneAuthState extends State<PhoneAuth> {
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Form(
-              child: ListView(
-                children: <Widget>[
-                  TextFormField(
-                    keyboardType: TextInputType.phone,
-                    controller: _phoneController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.phone),
-                      labelText: 'Phone',
-                    ),
-                    autovalidate: true,
-                    autocorrect: false,
-                    validator: (_) {
-                      return !state.isPhoneValid ? 'Invalid Phone' : null;
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        LoginButton(
-                          onPressed: isLoginButtonEnabled(state)
-                              ? _onFormSubmitted
-                              : null,
+          return Form(
+            child: ListView(
+              children: <Widget>[
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      height: 250,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          alignment: Alignment.topCenter,
+                          image: AssetImage(
+                            "assets/background2.png",
+                          ),
+                          fit: BoxFit.fill,
                         ),
-
-                        
-                      ],
+                      ),
                     ),
+                    Text(
+                      "Losses",
+                      style: TextStyle(fontSize: 60),
+                    ),
+                  ],
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.phone),
+                    labelText: 'Phone',
                   ),
-                ],
-              ),
+                  autovalidate: true,
+                  autocorrect: false,
+                  validator: (_) {
+                    return !state.isPhoneValid ? 'Invalid Phone' : null;
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      MainButton(
+                        caption: "Войти",
+                        onPressed: isLoginButtonEnabled(state)
+                            ? _onFormSubmitted
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -226,10 +240,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
   void _onFormSubmitted() {
     _loginBloc.add(
       VerifyPhoneNumber(phone: _phoneController.text),
-
     );
-    //Navigator.of(context).pushNamed('/signWithPhone', arguments:  widget._userRepository);
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SignWithPhone()));
+    Navigator.of(context)
+        .pushNamed('/signWithPhone', arguments: widget._userRepository);
+    //Navigator.of(context).pushNamed();
   }
 
   // Example code of how to verify phone number
