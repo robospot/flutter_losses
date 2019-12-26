@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -40,7 +41,18 @@ class UserRepository {
   Future<void> verifyPhoneNumber(String phoneNumber) async {
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
-      _firebaseAuth.signInWithCredential(phoneAuthCredential);
+      _firebaseAuth
+          .signInWithCredential(phoneAuthCredential)
+          .then((AuthResult value) {
+        if (value.user != null) {
+          
+          print('Auth success');
+        } else {
+          print('Auth error');
+        }
+      }).catchError((error) {
+        print('Auth error');
+      });
 
       print('Received phone auth credential: $phoneAuthCredential');
     };
@@ -64,7 +76,7 @@ class UserRepository {
 
     await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 5),
+        timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
         codeSent: codeSent,
@@ -83,6 +95,21 @@ class UserRepository {
 
     if (user != null) {
       print('Successfully signed in, uid: ' + user.uid);
+
+      final QuerySnapshot result = await Firestore.instance
+          .collection('users')
+          .where('id', isEqualTo: user.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      if (documents.length == 0) {
+        // Update data to server if new user
+        Firestore.instance.collection('users').document(user.uid).setData({
+          'displayName': user.displayName,
+          'photoUrl': user.photoUrl,
+          'id': user.uid,
+          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+        });
+      }
     } else {
       print('Sign in failed');
     }
