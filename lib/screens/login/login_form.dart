@@ -116,11 +116,20 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        LoginButton(
-                          onPressed: isLoginButtonEnabled(state)
-                              ? _onFormSubmitted
-                              : null,
-                        ),
+                        // LoginButton(caption: "Login",
+                        //   onPressed: isLoginButtonEnabled(state)
+                        //       ? _onFormSubmitted
+                        //       : null,
+                        // ),
+                        RaisedButton(
+                            child: Text("Log in"),
+                            onPressed: () => _loginBloc.add(
+                                  VerifyPhoneNumber(
+                                    phone: _phoneController.text ,
+                                      
+                                   ),
+                                )),
+                        
                         RaisedButton(
                             child: Text("Log in"),
                             onPressed: () => _loginBloc.add(

@@ -5,10 +5,7 @@ import 'bloc/auth/bloc.dart';
 import 'helpers/user_repository.dart';
 import 'screens/home_screen.dart';
 
-import 'screens/login/onboarding_screen.dart';
-import 'screens/login/phone_auth_screen.dart';
-
-import 'screens/login/sign_with_phone.dart';
+import 'screens/login/login_screen.dart';
 import 'screens/splash_screen.dart';
 
 class App extends StatelessWidget {
@@ -30,42 +27,58 @@ class App extends StatelessWidget {
                 textTheme: ButtonTextTheme.accent, ),
                 accentColor: Colors.white
                 ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  if (state is Uninitialized) {
-                    return SplashScreen();
-                  }
-                  if (state is Unauthenticated) {
-                    //     return LoginScreen(userRepository: _userRepository);
-                    return Onboarding();
-                    //PhoneAuth(userRepository: _userRepository);
-                  }
-                  if (state is Authenticated) {
-                    return Home();
-                  }
-                  return SplashScreen();
-                },
-              ),
-          '/onboarding': (context) => Onboarding(),
-          '/signWithPhone': (context) => BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  if (state is Uninitialized) {
-                    return SplashScreen();
-                  }
-                  if (state is Unauthenticated) {
-                    //     return LoginScreen(userRepository: _userRepository);
-                    return SignWithPhone();
-                  }
-                  if (state is Authenticated) {
-                    return Home();
-                  }
-                  return SplashScreen();
-                },
-              ),
-          '/phone_auth': (context) =>
-              PhoneAuth(userRepository: _userRepository),
-        });
+                 home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+        if (state is Uninitialized) {
+          return SplashScreen();
+        }
+        if (state is Unauthenticated) {
+          return LoginScreen(userRepository: _userRepository);
+        }
+
+        if (state is Authenticated) {
+          return HomeScreen();
+        }
+      
+        return Container();
+      }),
+        // initialRoute: '/',
+        // routes: {
+        //   '/': (context) => BlocBuilder<AuthBloc, AuthState>(
+        //         builder: (context, state) {
+        //           if (state is Uninitialized) {
+        //             return SplashScreen();
+        //           }
+        //           if (state is Unauthenticated) {
+        //             //     return LoginScreen(userRepository: _userRepository);
+        //             return Onboarding();
+        //             //PhoneAuth(userRepository: _userRepository);
+        //           }
+        //           if (state is Authenticated) {
+        //             return Home();
+        //           }
+        //           return SplashScreen();
+        //         },
+        //       ),
+        //   '/onboarding': (context) => Onboarding(),
+        //   '/signWithPhone': (context) => BlocBuilder<AuthBloc, AuthState>(
+        //         builder: (context, state) {
+        //           if (state is Uninitialized) {
+        //             return SplashScreen();
+        //           }
+        //           if (state is Unauthenticated) {
+        //             //     return LoginScreen(userRepository: _userRepository);
+        //             return SignWithPhone();
+        //           }
+        //           if (state is Authenticated) {
+        //             return Home();
+        //           }
+        //           return SplashScreen();
+        //         },
+        //       ),
+        //   '/phone_auth': (context) =>
+        //       PhoneAuth(userRepository: _userRepository),
+        // }
+        );
   }
 }

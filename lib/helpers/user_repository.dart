@@ -40,28 +40,9 @@ class UserRepository {
 
   String _verificationId;
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential phoneAuthCredential) {
-      _firebaseAuth
-          .signInWithCredential(phoneAuthCredential)
-          .then((AuthResult value) {
-        if (value.user != null) {
-          
-          print('Auth success');
-        } else {
-          print('Auth error');
-        }
-      }).catchError((error) {
-        print('Auth error');
-      });
-
-      print('Received phone auth credential: $phoneAuthCredential');
-    };
-
-    final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
-      print(
-          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      _verificationId = verificationId;
     };
 
     final PhoneCodeSent codeSent =
@@ -70,18 +51,42 @@ class UserRepository {
       _verificationId = verificationId;
     };
 
-    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
-      _verificationId = verificationId;
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      print(
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    };
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential phoneAuthCredential) async {
+      //  _firebaseAuth.signInWithCredential(phoneAuthCredential);
+      FirebaseUser user =
+          (await _firebaseAuth.signInWithCredential(phoneAuthCredential)).user;
+      await createUserInFirebase(user);
+//       _firebaseAuth
+//           .signInWithCredential(phoneAuthCredential)
+//           .then((AuthResult value) {
+
+//         if (value.user != null) {
+// await createUserInFirebase(user);
+//           print('Auth success');
+//         } else {
+//           print('Auth error');
+//         }
+//       }).catchError((error) {
+//         print('Auth error');
+//       });
+
+      print('Received phone auth credential: $phoneAuthCredential');
     };
 
     await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 60),
+        timeout: const Duration(seconds: 5),
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
         codeSent: codeSent,
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    print("${_firebaseAuth.currentUser()}");
   }
 
   Future<FirebaseUser> signInWithPhoneNumber(String smsCode) async {
@@ -95,32 +100,38 @@ class UserRepository {
 
     assert(user.uid == currentUser.uid);
 // Добавляем отправку данных в бекэнд
-    User _user = User(
-        uid: currentUser.uid,
-        creationTime: currentUser.metadata.creationTime,
-        phone: currentUser.phoneNumber);
+    // User _user = User(
+    //     uid: currentUser.uid,
+    //     creationTime: currentUser.metadata.creationTime,
+    //     phone: currentUser.phoneNumber);
 
     if (user != null) {
       print('Successfully signed in, uid: ' + user.uid);
 
-      final QuerySnapshot result = await Firestore.instance
-          .collection('users')
-          .where('id', isEqualTo: user.uid)
-          .getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-      if (documents.length == 0) {
-        // Update data to server if new user
-        Firestore.instance.collection('users').document(user.uid).setData({
-          'displayName': user.displayName,
-          'photoUrl': user.photoUrl,
-          'id': user.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-        });
-      }
+      await createUserInFirebase(user);
     } else {
       print('Sign in failed');
     }
     return currentUser;
+  }
+
+  Future createUserInFirebase(FirebaseUser user) async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('users')
+        .where('id', isEqualTo: user.uid)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    if (documents.length == 0) {
+      // Update data to server if new user
+      Firestore.instance.collection('users').document(user.uid).setData({
+        'displayName': user.displayName,
+        'phone': user.phoneNumber,
+        'email': user.email,
+        'photoUrl': user.photoUrl,
+        'id': user.uid,
+        'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+    }
   }
 
   Future<void> signOut() async {

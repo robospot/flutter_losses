@@ -113,13 +113,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String phone,
     
   }) async* {
-   // yield LoginState.loading();
-   // try {
+   yield LoginState.loading();
+   try {
       await _userRepository.verifyPhoneNumber(phone);
-    //  yield LoginState.success();
-    // } catch (_) {
-    //   yield LoginState.failure();
-    // }
+     yield LoginState.success();
+    } catch (_) {
+      yield LoginState.failure();
+    }
   }
 
    Stream<LoginState> _mapLoginWithPhoneToState({
