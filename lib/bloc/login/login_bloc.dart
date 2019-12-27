@@ -123,7 +123,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
    Stream<LoginState> _mapLoginWithPhoneToState({
-    String phone,
+   
     String sms
     
   }) async* {

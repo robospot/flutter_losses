@@ -15,6 +15,7 @@ class FirebaseNotifications {
     if (Platform.isIOS) iOS_Permission();
 
     _firebaseMessaging.getToken().then((token) {
+      print("*************token");
       print(token);
     });
 

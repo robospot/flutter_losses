@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_losses/models/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
@@ -79,7 +80,13 @@ class UserRepository {
     final FirebaseUser user =
         (await _firebaseAuth.signInWithCredential(credential)).user;
     final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+
     assert(user.uid == currentUser.uid);
+// Добавляем отправку данных в бекэнд
+    User _user = User(
+        uid: currentUser.uid,
+        creationTime: currentUser.metadata.creationTime,
+        phone: currentUser.phoneNumber);
 
     if (user != null) {
       print('Successfully signed in, uid: ' + user.uid);
