@@ -2,6 +2,8 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_losses/helpers/firebase_notification_handler.dart';
 
+import 'add_object.dart';
+
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -27,6 +29,7 @@ void initState() {
 
           index: currentIndex,
           children: <Widget>[
+            AddObjectScreen()
             // Navigator(
             //   key: navigatorKey,
             //   onGenerateRoute: (route) =>
