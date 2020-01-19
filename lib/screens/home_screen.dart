@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_losses/helpers/firebase_notification_handler.dart';
 
 import 'add_object.dart';
+import 'my_objects.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -29,7 +30,8 @@ void initState() {
 
           index: currentIndex,
           children: <Widget>[
-            AddObjectScreen()
+            AddObjectScreen(),
+            MyObjects()
             // Navigator(
             //   key: navigatorKey,
             //   onGenerateRoute: (route) =>

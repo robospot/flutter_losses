@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_losses/models/user.dart';
+import 'package:flutter_losses/screens/add_object.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
@@ -118,7 +119,7 @@ class UserRepository {
   Future createUserInFirebase(FirebaseUser user) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
-        .where('id', isEqualTo: user.uid)
+        .where('userid', isEqualTo: user.uid)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     if (documents.length == 0) {
@@ -128,7 +129,7 @@ class UserRepository {
         'phone': user.phoneNumber,
         'email': user.email,
         'photoUrl': user.photoUrl,
-        'id': user.uid,
+        'userid': user.uid,
         'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       });
     }
@@ -146,7 +147,37 @@ class UserRepository {
     return currentUser != null;
   }
 
-  Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).phoneNumber;
+  Future<FirebaseUser> getUser() async {
+    return (await _firebaseAuth.currentUser());
+  }
+
+  addObject(ObjectData objectData) {
+    var documentReference = Firestore.instance
+        .collection('objects')
+        // .document()
+        // .collection('objects')
+        .document(objectData.objectId);
+    //.document(DateTime.now().millisecondsSinceEpoch.toString());
+
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+        documentReference,
+        {
+          'objectid': objectData.objectId,
+          'name': objectData.name,
+          'description': objectData.description,
+          'userid': objectData.userId
+        },
+      );
+    });
+  }
+
+  Future<List<DocumentSnapshot>> listObjects(FirebaseUser user) async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('objects')
+        .where('userid', isEqualTo: user.uid)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    return documents;
   }
 }
