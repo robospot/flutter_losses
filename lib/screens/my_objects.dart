@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/auth/bloc.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
+import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/models/item.dart';
 import 'package:flutter_losses/screens/object_details.dart';
 
 class MyObjects extends StatefulWidget {
@@ -13,25 +14,27 @@ class MyObjects extends StatefulWidget {
 }
 
 class _MyObjectsState extends State<MyObjects> {
-  UserRepository _userRepository = UserRepository();
+
+  FirebaseService db = FirebaseService();
   @override
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder<List<DocumentSnapshot>>(
-        future: _userRepository.listObjects(
+        future: db.getItems(
             ((BlocProvider.of<AuthBloc>(context).state) as Authenticated).user),
-        builder: (context, AsyncSnapshot snapshot) {
+        builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            final List<Item> items = snapshot.data.map((s) => Item.fromFirestore(s)).toList();
             return ListView.builder(
-              itemCount: snapshot.data.length,
+              itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ObjectDetails(object: snapshot.data[index],)),
+                    MaterialPageRoute(builder: (context) => ItemDetailScreen(item: items[index],)),
                   ),
-                  title: Text(snapshot.data[index]['name']),
-                  subtitle: Text(snapshot.data[index]['description']),
+                  title: Text(items[index].itemId),
+                  subtitle: Text(items[index].itemDescription),
                 );
               },
             );

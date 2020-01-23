@@ -1,20 +1,21 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_losses/models/item.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
-class ObjectDetails extends StatefulWidget {
-  final dynamic object;
-  ObjectDetails({Key key, this.object}) : super(key: key);
+import 'dart:typed_data';
+
+
+class ItemDetailScreen extends StatefulWidget {
+  final Item item;
+  ItemDetailScreen({Key key, this.item}) : super(key: key);
 
   @override
-  _ObjectDetailsState createState() => _ObjectDetailsState();
+  _ItemDetailScreenState createState() => _ItemDetailScreenState();
 }
 
-class _ObjectDetailsState extends State<ObjectDetails> {
+class _ItemDetailScreenState extends State<ItemDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final message =
@@ -60,7 +61,7 @@ class _ObjectDetailsState extends State<ObjectDetails> {
           child: Column(
             children: <Widget>[
               ListTile(
-                title: Text(widget.object['description']),
+                title: Text(widget.item.itemDescription),
               ),
               Container(
                 width: 100,

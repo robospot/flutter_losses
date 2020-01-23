@@ -23,7 +23,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   //final TextEditingController _smsController = TextEditingController();
   LoginBloc _loginBloc;
 
-  UserRepository get _userRepository => widget._userRepository;
+  // UserRepository get _userRepository => widget._userRepository;
 
   bool get isPopulated => _phoneController.text.isNotEmpty;
   bool isLoginButtonEnabled(LoginState state) {

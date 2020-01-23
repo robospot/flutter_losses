@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_losses/models/user.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -10,7 +10,7 @@ abstract class AuthState extends Equatable {
 class Uninitialized extends AuthState {}
 
 class Authenticated extends AuthState {
-  final FirebaseUser user;
+  final User user;
 
   const Authenticated(this.user);
 
