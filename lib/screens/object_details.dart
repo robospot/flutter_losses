@@ -1,11 +1,11 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_losses/helpers/constants.dart';
 import 'package:flutter_losses/models/item.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'dart:typed_data';
-
 
 class ItemDetailScreen extends StatefulWidget {
   final Item item;
@@ -16,13 +16,25 @@ class ItemDetailScreen extends StatefulWidget {
 }
 
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController itemNameController = TextEditingController();
+  final TextEditingController itemDescriptionController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    itemNameController.text = widget.item.itemName;
+    itemDescriptionController.text = widget.item.itemDescription;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final message =
+    final String link =
         // ignore: lines_longer_than_80_chars
-        'kjkkjkjkjk';
+        '${ConfigStorage.baseUrl}?q=${widget.item.itemId}';
     QrPainter qrcode = QrPainter(
-      data: message,
+      data: link,
       version: QrVersions.auto,
       color: Color(0xff1a5441),
       emptyColor: Color(0xffeafcf6),
@@ -58,22 +70,38 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           title: Text("Моя вещь"),
         ),
         body: Container(
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(widget.item.itemDescription),
+            margin: EdgeInsets.all(16),
+            child: Form(
+              child: Center(
+                child: ListView(
+                  children: <Widget>[
+                    TextFormField(
+                      controller: itemNameController,
+                      decoration: new InputDecoration(labelText: 'Название'),
+                    ),
+                    TextFormField(
+                      controller: itemDescriptionController,
+                      decoration: new InputDecoration(labelText: 'Описание'),
+                      
+                    ),
+                    Center(
+                      child: Container(
+                        padding: EdgeInsets.only(top: 24, bottom: 8),
+                        width: 200,
+                        child:
+                            //qrFutureBuilder,
+                            CustomPaint(
+                                size: Size.square(200), painter: qrcode),
+                      ),
+                    ),
+                    Center(child: Text(link)),
+                    RaisedButton(
+                        child: Text("Share"),
+                        onPressed: () => shareObject(qrcode))
+                  ],
+                ),
               ),
-              Container(
-                width: 100,
-                child:
-                    //qrFutureBuilder,
-                    CustomPaint(size: Size.square(100), painter: qrcode),
-              ),
-              RaisedButton(
-                  child: Text("Share"), onPressed: () => shareObject(qrcode))
-            ],
-          ),
-        ));
+            )));
   }
 
   // Future<ui.Image> _loadOverlayImage() async {
@@ -91,6 +119,6 @@ shareObject(QrPainter qrcode) async {
     'esys.png',
     bytes.buffer.asUint8List(),
     'image/png',
-    text: 'My optional text.',
+    text: 'Персональный QR код',
   );
 }

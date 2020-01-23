@@ -21,6 +21,6 @@ class User extends Equatable {
         email: doc.first.data["email"],
         displayName: doc.first.data["displayName"],
         photoUrl: doc.first.data["photoUrl"],
-        uid: doc.first.data["userid"]);
+        uid: doc.first.data["userId"]);
   }
 }

@@ -33,7 +33,7 @@ class _MyObjectsState extends State<MyObjects> {
                     context,
                     MaterialPageRoute(builder: (context) => ItemDetailScreen(item: items[index],)),
                   ),
-                  title: Text(items[index].itemId),
+                  title: Text(items[index].itemName),
                   subtitle: Text(items[index].itemDescription),
                 );
               },

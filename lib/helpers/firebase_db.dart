@@ -19,7 +19,7 @@ class FirebaseService {
   Future<List<DocumentSnapshot>> getUserProfile(String uid) async {
     final QuerySnapshot result = await _db
         .collection('users')
-        .where('userid', isEqualTo: uid)
+        .where('userId', isEqualTo: uid)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     return documents;
