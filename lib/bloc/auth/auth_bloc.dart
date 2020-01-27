@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
+import 'package:flutter_losses/utils/user_repository.dart';
 import './bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {

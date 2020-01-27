@@ -5,7 +5,7 @@ import 'package:flutter_losses/bloc/login/bloc.dart';
 import 'package:flutter_losses/widgets/buttons.dart';
 
 import '../../bloc/auth/bloc.dart';
-import '../../helpers/user_repository.dart';
+import '../../utils/user_repository.dart';
 
 class PhoneAuth extends StatefulWidget {
   final UserRepository _userRepository;

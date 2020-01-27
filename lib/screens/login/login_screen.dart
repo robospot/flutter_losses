@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
+import 'package:flutter_losses/utils/user_repository.dart';
 
 import 'login_form.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_losses/bloc/auth/bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
+import 'package:flutter_losses/utils/user_repository.dart';
 
 
 import 'google_login_button.dart';

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/auth/bloc.dart';
-import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/utils/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 import 'package:flutter_losses/screens/add_object.dart';
 import 'package:flutter_losses/screens/object_details.dart';

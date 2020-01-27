@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/auth/bloc.dart';
-import 'helpers/user_repository.dart';
+import 'utils/user_repository.dart';
 import 'screens/home_screen.dart';
 
 import 'screens/login/login_screen.dart';
@@ -22,9 +22,13 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Losses',
         theme: ThemeData(
-            buttonTheme: ButtonThemeData(
-                buttonColor: Color(0xFFFF7F5D),
-                textTheme: ButtonTextTheme.accent, ),
+           primarySwatch: Colors.blue,
+          backgroundColor: Color.lerp(Colors.grey[200], Colors.black, 0.005),
+          scaffoldBackgroundColor: Colors.grey[200],
+          dialogBackgroundColor: Colors.grey[300],
+            // buttonTheme: ButtonThemeData(
+            //     buttonColor: Color(0xFFFF7F5D),
+            //     textTheme: ButtonTextTheme.accent, ),
                 accentColor: Colors.white
                 ),
                  home: BlocBuilder<AuthBloc, AuthState>(

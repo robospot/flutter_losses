@@ -1,8 +1,8 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_losses/helpers/constants.dart';
-import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/utils/constants.dart';
+import 'package:flutter_losses/utils/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -17,7 +17,7 @@ class ItemDetailScreen extends StatefulWidget {
 }
 
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemDescriptionController =
       TextEditingController();

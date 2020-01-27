@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_losses/helpers/firebase_db.dart';
-import 'package:flutter_losses/helpers/user_repository.dart';
+import 'package:flutter_losses/utils/firebase_db.dart';
+import 'package:flutter_losses/utils/user_repository.dart';
 import 'package:flutter_losses/models/user.dart';
 import './bloc.dart';
 

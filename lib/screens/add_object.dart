@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/auth/bloc.dart';
-import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/utils/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 
 class AddObjectScreen extends StatefulWidget {

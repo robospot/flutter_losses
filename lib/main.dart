@@ -4,7 +4,7 @@ import 'package:flutter_losses/bloc/login/login_bloc.dart';
 import 'app.dart';
 import 'bloc/auth/bloc.dart';
 import 'bloc/user/bloc.dart';
-import 'helpers/user_repository.dart';
+import 'utils/user_repository.dart';
 import 'simple_bloc_delegate.dart';
 import 'package:bloc/bloc.dart';
 

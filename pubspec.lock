@@ -165,13 +165,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
-  lite_rolling_switch:
-    dependency: "direct main"
-    description:
-      name: lite_rolling_switch
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   matcher:
     dependency: transitive
     description:
@@ -186,6 +179,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
+  neumorphic:
+    dependency: "direct main"
+    description:
+      name: neumorphic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   path:
     dependency: transitive
     description:

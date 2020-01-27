@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/utils/firebase_db.dart';
 import 'package:flutter_losses/models/user.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';

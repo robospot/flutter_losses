@@ -1,10 +1,11 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_losses/helpers/firebase_notification_handler.dart';
+import 'package:flutter_losses/utils/firebase_notification_handler.dart';
 
 import 'add_object.dart';
 import 'my_objects.dart';
 import 'profile_screen.dart';
+import 'screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +34,8 @@ void initState() {
           children: <Widget>[
             AddObjectScreen(),
             MyObjects(),
-            ProfileScreen()
+       //     ProfileScreen(),
+            Neumorphism()
             // Navigator(
             //   key: navigatorKey,
             //   onGenerateRoute: (route) =>
@@ -48,7 +50,8 @@ void initState() {
             // Settings(),
           ],
         ),
-         bottomNavigationBar: BottomNavyBar(
+         bottomNavigationBar: 
+         BottomNavyBar(
           selectedIndex: currentIndex,
           showElevation: true, 
           onItemSelected: (index) => setState(() {
