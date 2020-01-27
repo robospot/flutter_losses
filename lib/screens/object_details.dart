@@ -2,6 +2,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_losses/helpers/constants.dart';
+import 'package:flutter_losses/helpers/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -20,6 +21,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemDescriptionController =
       TextEditingController();
+  bool showEmail = true;
+  bool showPhone = true;
 
   @override
   void initState() {
@@ -68,6 +71,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Моя вещь"),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.mode_edit), onPressed: ()=> changeDetails(),)
+          ],
         ),
         body: Container(
             margin: EdgeInsets.all(16),
@@ -82,7 +88,26 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     TextFormField(
                       controller: itemDescriptionController,
                       decoration: new InputDecoration(labelText: 'Описание'),
-                      
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Показывать телефон"),
+                        Switch(
+                          value: widget.item.showPhone,
+                          onChanged: (bool value) => showPhoneChanged(value),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Показывать email"),
+                        Switch(
+                          value: widget.item.showEmail,
+                          onChanged: (bool value) => showEmailChanged(value),
+                        )
+                      ],
                     ),
                     Center(
                       child: Container(
@@ -110,6 +135,25 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   //   ui.decodeImageFromList(byteData.buffer.asUint8List(), completer.complete);
   //   return completer.future;
   // }
+  showEmailChanged(bool value) {
+    FirebaseService db = FirebaseService();
+    setState(() {
+      widget.item.showEmail = value;
+
+      db.updateItem(widget.item);
+    });
+  }
+
+  showPhoneChanged(bool value) {
+    FirebaseService db = FirebaseService();
+    setState(() {
+      widget.item.showPhone = value;
+      db.updateItem(widget.item);
+    });
+  }
+  changeDetails(){
+    
+  }
 }
 
 shareObject(QrPainter qrcode) async {

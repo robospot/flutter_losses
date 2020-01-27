@@ -6,20 +6,12 @@ import 'package:flutter_losses/bloc/auth/bloc.dart';
 import 'package:flutter_losses/helpers/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 
-
 class AddObjectScreen extends StatefulWidget {
   AddObjectScreen({Key key}) : super(key: key);
 
   @override
   _AddObjectScreenState createState() => _AddObjectScreenState();
 }
-
-// class ObjectData {
-//   String name = '';
-//   String description = '';
-//   String objectId = '';
-//   String userId = '';
-// }
 
 class _AddObjectScreenState extends State<AddObjectScreen> {
   Item item = Item();
@@ -30,6 +22,9 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Новая вещь"),
+        ),
         body:
             //  SingleChildScrollView(
             //     child:
@@ -38,7 +33,8 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
                     key: _formKey,
                     child: ListView(
                       children: <Widget>[
-                        TextFormField(controller: nameController,
+                        TextFormField(
+                          controller: nameController,
                           decoration: new InputDecoration(
                               hintText: 'название', labelText: 'Название'),
                           //validator: this._validatePassword,
@@ -47,7 +43,8 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
                           //   //   this._data.password = value;
                           // }
                         ),
-                        TextFormField(controller: descriptionController,
+                        TextFormField(
+                          controller: descriptionController,
                           decoration: new InputDecoration(
                               hintText: 'Описание', labelText: 'Описание'),
                           //validator: this._validatePassword,

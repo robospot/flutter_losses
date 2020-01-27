@@ -62,7 +62,9 @@ Future updateItem(Item item) async {
       'objectDescription': item.itemDescription,
       'objectName': item.itemName,
       'userId':item.userId,
-      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+      'showPhone': item.showPhone,
+      'showEmail': item.showEmail,
+      'updatedAt': DateTime.now().millisecondsSinceEpoch.toString(),
 
     });
  }
