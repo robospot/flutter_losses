@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/auth/bloc.dart';
@@ -21,6 +22,7 @@ class ObjectData {
 
 class _AddObjectScreenState extends State<AddObjectScreen> {
   ObjectData objectData = ObjectData();
+  var key = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +30,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         //  SingleChildScrollView(
         //     child:
              Container(
-                child: Form(
+                child: Form(key: key,
                     child: ListView(
       children: <Widget>[
         TextFormField(
@@ -49,7 +51,7 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           //   this._data.password = value;
           }
         ),
-        RaisedButton(child: Text("Создать"), onPressed: () => createObject(objectData),),
+        RaisedButton(child: Text("Создать"), onPressed: () => createObject(key, objectData),),
         RaisedButton(child: Text("Выход"), onPressed: () =>  BlocProvider.of<AuthBloc>(context)
                                       .add(LoggedOut()),)
               ],
@@ -59,30 +61,40 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
           }
         }
         
-        createObject(ObjectData objectData) {
+        createObject(var key, ObjectData objectData) async{
+          key.currentState.save();
            var rng = new Random();
            objectData.id = rng.nextInt(10000).toString();
-           
-           var documentReference = Firestore.instance
-          .collection('Users')
-          // .document()
-          // .collection('objects')
-          .document(objectData.name);
-          //.document(DateTime.now().millisecondsSinceEpoch.toString());
+           FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+           final FirebaseUser currentUser = await _firebaseAuth.currentUser();
 
-      Firestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
+           
+           var documentReference = Firestore.instance;
+           documentReference.collection('users').document(currentUser.phoneNumber).collection('objects').document(objectData.name).setData( {
             'id': objectData.id,
             'name': objectData.name,
             'description': objectData.description
-            // 'idFrom': id,
-            // 'idTo': peerId,
-            // 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'content': content,
-            // 'type': type
-          },
-        );
-      });
+          
+          },);
+          // .collection('Users')
+          //  .document()
+          //  .collection('objects')
+          // .document(objectData.name);
+          //.document(DateTime.now().millisecondsSinceEpoch.toString());
+
+      // Firestore.instance.runTransaction((transaction) async {
+      //   await transaction.set(
+      //     documentReference,
+      //     {
+      //       'id': objectData.id,
+      //       'name': objectData.name,
+      //       'description': objectData.description
+      //       // 'idFrom': id,
+      //       // 'idTo': peerId,
+      //       // 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      //       // 'content': content,
+      //       // 'type': type
+      //     },
+      //   );
+      // });
 }

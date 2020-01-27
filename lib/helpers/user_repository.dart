@@ -39,7 +39,7 @@ class UserRepository {
   }
 
   String _verificationId;
-  Future<void> verifyPhoneNumber(String phoneNumber) async {
+   verifyPhoneNumber(String phoneNumber) async {
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       _verificationId = verificationId;
@@ -118,12 +118,12 @@ class UserRepository {
   Future createUserInFirebase(FirebaseUser user) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
-        .where('id', isEqualTo: user.uid)
+        .where('id', isEqualTo: user.phoneNumber)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     if (documents.length == 0) {
       // Update data to server if new user
-      Firestore.instance.collection('users').document(user.uid).setData({
+      Firestore.instance.collection('users').document(user.phoneNumber).setData({
         'displayName': user.displayName,
         'phone': user.phoneNumber,
         'email': user.email,
