@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_losses/models/user.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -9,15 +10,15 @@ abstract class AuthState extends Equatable {
 class Uninitialized extends AuthState {}
 
 class Authenticated extends AuthState {
-  final String phoneNumber;
+  final User user;
 
-  const Authenticated(this.phoneNumber);
-
-  @override
-  List<Object> get props => [phoneNumber];
+  const Authenticated(this.user);
 
   @override
-  String toString() => 'Authenticated { phoneNumber: $phoneNumber }';
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'Authenticated { user: $user }';
 }
 
 class Unauthenticated extends AuthState {}

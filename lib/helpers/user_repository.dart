@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_losses/helpers/firebase_db.dart';
 import 'package:flutter_losses/models/user.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
@@ -13,6 +14,7 @@ class UserRepository {
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
   Future<FirebaseUser> signInWithGoogle() async {
+    FirebaseService db = FirebaseService();
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -21,6 +23,8 @@ class UserRepository {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    await db.createUserInFirebase(user);
     return _firebaseAuth.currentUser();
   }
 
@@ -39,14 +43,16 @@ class UserRepository {
   }
 
   String _verificationId;
-   verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    FirebaseService db = FirebaseService();
+
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       _verificationId = verificationId;
     };
 
     final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {
+        (String verificationId, [int forceResendingToken]) {
       print("****Please check your phone for the verification code****");
       _verificationId = verificationId;
     };
@@ -61,7 +67,7 @@ class UserRepository {
       //  _firebaseAuth.signInWithCredential(phoneAuthCredential);
       FirebaseUser user =
           (await _firebaseAuth.signInWithCredential(phoneAuthCredential)).user;
-      await createUserInFirebase(user);
+      await db.createUserInFirebase(user);
 //       _firebaseAuth
 //           .signInWithCredential(phoneAuthCredential)
 //           .then((AuthResult value) {
@@ -90,6 +96,7 @@ class UserRepository {
   }
 
   Future<FirebaseUser> signInWithPhoneNumber(String smsCode) async {
+    FirebaseService db = FirebaseService();
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: _verificationId,
       smsCode: smsCode,
@@ -100,18 +107,15 @@ class UserRepository {
 
     assert(user.uid == currentUser.uid);
 // Добавляем отправку данных в бекэнд
-    // User _user = User(
-    //     uid: currentUser.uid,
-    //     creationTime: currentUser.metadata.creationTime,
-    //     phone: currentUser.phoneNumber);
 
-    if (user != null) {
-      print('Successfully signed in, uid: ' + user.uid);
+    await db.createUserInFirebase(user);
+    // if (user != null) {
+    //   print('Successfully signed in, uid: ' + user.uid);
 
-      await createUserInFirebase(user);
-    } else {
-      print('Sign in failed');
-    }
+    //   await createUserInFirebase(user);
+    // } else {
+    //   print('Sign in failed');
+    // }
     return currentUser;
   }
 
@@ -146,7 +150,41 @@ class UserRepository {
     return currentUser != null;
   }
 
-  Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).phoneNumber;
+  Future<User> getUser() async {
+    FirebaseService db = FirebaseService();
+    FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
+    User currentUser =
+          User.fromFirestore(await db.getUserProfile(firebaseUser.uid));
+    return currentUser;
   }
+
+  // addObject(ObjectData objectData) {
+  //   var documentReference = Firestore.instance
+  //       .collection('objects')
+  //       // .document()
+  //       // .collection('objects')
+  //       .document(objectData.objectId);
+  //   //.document(DateTime.now().millisecondsSinceEpoch.toString());
+
+  //   Firestore.instance.runTransaction((transaction) async {
+  //     await transaction.set(
+  //       documentReference,
+  //       {
+  //         'objectid': objectData.objectId,
+  //         'name': objectData.name,
+  //         'description': objectData.description,
+  //         'userid': objectData.userId
+  //       },
+  //     );
+  //   });
+  // }
+
+  // Future<List<DocumentSnapshot>> listObjects(FirebaseUser user) async {
+  //   final QuerySnapshot result = await Firestore.instance
+  //       .collection('objects')
+  //       .where('userid', isEqualTo: user.uid)
+  //       .getDocuments();
+  //   final List<DocumentSnapshot> documents = result.documents;
+  //   return documents;
+  // }
 }

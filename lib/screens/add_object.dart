@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/auth/bloc.dart';
+import 'package:flutter_losses/helpers/firebase_db.dart';
+import 'package:flutter_losses/models/item.dart';
 
 class AddObjectScreen extends StatefulWidget {
   AddObjectScreen({Key key}) : super(key: key);
@@ -13,88 +13,96 @@ class AddObjectScreen extends StatefulWidget {
   _AddObjectScreenState createState() => _AddObjectScreenState();
 }
 
-
-class ObjectData {
-  String name = '';
-  String description = '';
-  String id ='';
-}
-
 class _AddObjectScreenState extends State<AddObjectScreen> {
-  ObjectData objectData = ObjectData();
-  var key = GlobalKey<FormState>();
+  Item item = Item();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Новая вещь"),
+        ),
         body:
-        //  SingleChildScrollView(
-        //     child:
-             Container(
-                child: Form(key: key,
+            //  SingleChildScrollView(
+            //     child:
+            Container(
+                child: Form(
+                    key: _formKey,
                     child: ListView(
-      children: <Widget>[
-        TextFormField(
-          decoration:
-              new InputDecoration(hintText: 'название', labelText: 'Название'),
-          //validator: this._validatePassword,
-           onSaved: (String value) {
-          objectData.name = value;
-          //   this._data.password = value;
-          }
-        ),
-        TextFormField(
-          decoration:
-              new InputDecoration(hintText: 'Описание', labelText: 'Описание'),
-          //validator: this._validatePassword,
-          onSaved: (String value) {
-            objectData.description = value;
-          //   this._data.password = value;
-          }
-        ),
-        RaisedButton(child: Text("Создать"), onPressed: () => createObject(key, objectData),),
-        RaisedButton(child: Text("Выход"), onPressed: () =>  BlocProvider.of<AuthBloc>(context)
-                                      .add(LoggedOut()),)
-              ],
-            )))
-            // )
-            );
-          }
-        }
-        
-        createObject(var key, ObjectData objectData) async{
-          key.currentState.save();
-           var rng = new Random();
-           objectData.id = rng.nextInt(10000).toString();
-           FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-           final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+                      children: <Widget>[
+                        TextFormField(
+                          controller: nameController,
+                          decoration: new InputDecoration(
+                              hintText: 'название', labelText: 'Название'),
+                          //validator: this._validatePassword,
+                          // onSaved: (String value) {
+                          //   entity.entityName = value;
+                          //   //   this._data.password = value;
+                          // }
+                        ),
+                        TextFormField(
+                          controller: descriptionController,
+                          decoration: new InputDecoration(
+                              hintText: 'Описание', labelText: 'Описание'),
+                          //validator: this._validatePassword,
+                          // onSaved: (String value) {
+                          //   objectData.description = value;
+                          //   //   this._data.password = value;
+                          // }
+                        ),
+                        RaisedButton(
+                          child: Text("Создать"),
+                          onPressed: () => createObject(_formKey, context),
+                        ),
+                        RaisedButton(
+                          child: Text("Выход"),
+                          onPressed: () => BlocProvider.of<AuthBloc>(context)
+                              .add(LoggedOut()),
+                        )
+                      ],
+                    )))
+        // )
+        );
+  }
 
-           
-           var documentReference = Firestore.instance;
-           documentReference.collection('users').document(currentUser.phoneNumber).collection('objects').document(objectData.name).setData( {
-            'id': objectData.id,
-            'name': objectData.name,
-            'description': objectData.description
-          
-          },);
-          // .collection('Users')
-          //  .document()
-          //  .collection('objects')
-          // .document(objectData.name);
-          //.document(DateTime.now().millisecondsSinceEpoch.toString());
+  createObject(GlobalKey<FormState> _formKey, BuildContext context) {
+    // UserRepository _userRepository = UserRepository();
+    // _formkey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      FirebaseService db = FirebaseService();
 
-      // Firestore.instance.runTransaction((transaction) async {
-      //   await transaction.set(
-      //     documentReference,
-      //     {
-      //       'id': objectData.id,
-      //       'name': objectData.name,
-      //       'description': objectData.description
-      //       // 'idFrom': id,
-      //       // 'idTo': peerId,
-      //       // 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      //       // 'content': content,
-      //       // 'type': type
-      //     },
-      //   );
-      // });
+      var rng = new Random();
+      Item item = Item(
+          itemId: rng.nextInt(10000).toString(),
+          userId: ((BlocProvider.of<AuthBloc>(context).state) as Authenticated)
+              .user
+              .uid,
+          itemName: nameController.text,
+          itemDescription: descriptionController.text);
+      db.createItem(item);
+    }
+
+    // _userRepository.addObject(objectData);
+    // var documentReference = Firestore.instance
+    //     .collection('objects')
+    //     // .document()
+    //     // .collection('objects')
+    //     .document(objectData.objectId);
+    // //.document(DateTime.now().millisecondsSinceEpoch.toString());
+
+    // Firestore.instance.runTransaction((transaction) async {
+    //   await transaction.set(
+    //     documentReference,
+    //     {
+    //       'objectid': objectData.objectId,
+    //       'name': objectData.name,
+    //       'description': objectData.description,
+    //       'userid': objectData.userId
+    //     },
+    //   );
+    // });
+  }
 }

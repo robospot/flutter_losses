@@ -6,14 +6,15 @@ import 'package:flutter_losses/bloc/login/bloc.dart';
 import 'package:flutter_losses/helpers/user_repository.dart';
 
 
-import 'login_button.dart';
+import 'google_login_button.dart';
+
 
 class LoginForm extends StatefulWidget {
-  final UserRepository _userRepository;
+  // final UserRepository _userRepository;
 
   LoginForm({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository,
+        // _userRepository = userRepository,
         super(key: key);
 
   State<LoginForm> createState() => _LoginFormState();
@@ -25,7 +26,7 @@ class _LoginFormState extends State<LoginForm> {
 
   LoginBloc _loginBloc;
 
-  UserRepository get _userRepository => widget._userRepository;
+  // UserRepository get _userRepository => widget._userRepository;
 
   bool get isPopulated => _phoneController.text.isNotEmpty;
   //&& _passwordController.text.isNotEmpty;
@@ -121,23 +122,25 @@ class _LoginFormState extends State<LoginForm> {
                         //       ? _onFormSubmitted
                         //       : null,
                         // ),
-                        RaisedButton(
-                            child: Text("Log in"),
-                            onPressed: () => _loginBloc.add(
-                                  VerifyPhoneNumber(
-                                    phone: _phoneController.text ,
+                        // RaisedButton(
+                        //     child: Text("validate phone"),
+                        //     onPressed: ()async { 
+                        //       _loginBloc.add(
+                        //           VerifyPhoneNumber(
+                        //             phone: _phoneController.text ,
                                       
-                                   ),
-                                )),
+                        //            ),
+                        //         );
+                        //     } ),
                         
-                        RaisedButton(
-                            child: Text("Log in"),
-                            onPressed: () => _loginBloc.add(
-                                  LoginWithPhone(
-                                      sms: _passwordController.text,
-                                   ),
-                                )),
-                    //    GoogleLoginButton(),
+                        // RaisedButton(
+                        //     child: Text("validate sms"),
+                        //     onPressed: () => _loginBloc.add(
+                        //           LoginWithPhone(
+                        //               sms: _passwordController.text,
+                        //            ),
+                        //         )),
+                        GoogleLoginButton(),
 
                         //      CreateAccountButton(userRepository: _userRepository),
                       ],
@@ -171,17 +174,17 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _onFormSubmitted() {
-    _loginBloc.add(
-      VerifyPhoneNumber(phone: _phoneController.text),
-    );
+  // void _onFormSubmitted() {
+  //   _loginBloc.add(
+  //     VerifyPhoneNumber(phone: _phoneController.text),
+  //   );
 
-    // _loginBloc.add(
+  //   // _loginBloc.add(
 
-    //   LoginWithCredentialsPressed(
-    //     email: _phoneController.text,
-    //     password: _passwordController.text,
-    //   ),
-    // );
-  }
+  //   //   LoginWithCredentialsPressed(
+  //   //     email: _phoneController.text,
+  //   //     password: _passwordController.text,
+  //   //   ),
+  //   // );
+  // }
 }

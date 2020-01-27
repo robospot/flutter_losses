@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_losses/helpers/firebase_notification_handler.dart';
 
 import 'add_object.dart';
-import 'list_object.dart';
+import 'my_objects.dart';
+import 'profile_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -31,7 +32,8 @@ void initState() {
           index: currentIndex,
           children: <Widget>[
             AddObjectScreen(),
-            ObjectListScreen()
+            MyObjects(),
+            ProfileScreen()
             // Navigator(
             //   key: navigatorKey,
             //   onGenerateRoute: (route) =>
@@ -64,10 +66,10 @@ void initState() {
                 icon: Icon(Icons.library_books),
                 title: Text('Мои вещи'),
                 activeColor: Colors.blue),
-            BottomNavyBarItem(
-                icon: Icon(Icons.chat),
-                title: Text('Чат'),
-                activeColor: Colors.blue),
+            // BottomNavyBarItem(
+            //     icon: Icon(Icons.chat),
+            //     title: Text('Чат'),
+            //     activeColor: Colors.blue),
                  BottomNavyBarItem(
                 icon: Icon(Icons.person),
                 title: Text('Профиль'),
