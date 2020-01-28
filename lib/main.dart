@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/bloc/login/login_bloc.dart';
+import 'package:flutter_losses/screens/itemDetails/bloc/itemdetails_bloc.dart';
 import 'package:flutter_losses/screens/itemListScreen/bloc/itemlist_bloc.dart';
 import 'app.dart';
 import 'bloc/auth/bloc.dart';
@@ -24,7 +25,9 @@ void main() {
               LoginBloc(userRepository: userRepository)),
       BlocProvider<UserBloc>(builder: (BuildContext context) => UserBloc()),
       BlocProvider<ItemlistBloc>(
-          builder: (BuildContext context) => ItemlistBloc(context)),
+          builder: (BuildContext context) => ItemlistBloc(context: context)),
+      BlocProvider<ItemdetailsBloc>(
+          builder: (BuildContext context) => ItemdetailsBloc()),
     ],
     child: App(userRepository: userRepository),
   ));

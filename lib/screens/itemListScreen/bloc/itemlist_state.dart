@@ -14,6 +14,8 @@ class ItemListLoading extends ItemlistState {
   List<Object> get props => [];
 }
 class ItemListLoaded extends ItemlistState {
+  final List<Item> items;
+  ItemListLoaded({this.items}):super();
   @override
   List<Object> get props => [];
 }

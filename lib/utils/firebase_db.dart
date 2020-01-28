@@ -7,13 +7,14 @@ class FirebaseService {
   final Firestore _db = Firestore.instance;
 
   //Get object list for the user
-  Future<List<DocumentSnapshot>> getItems(User user) async {
+  Future<List<Item>> getItems(User user) async {
     final QuerySnapshot result = await _db
         .collection('objects')
         .where('userId', isEqualTo: user.uid)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
-    return documents;
+    return documents.map((f) => Item.fromFirestore(f)).toList();
+   
   }
 
   Future<List<DocumentSnapshot>> getUserProfile(String uid) async {

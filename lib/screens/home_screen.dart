@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_losses/utils/firebase_notification_handler.dart';
 
 import 'add_object.dart';
-import 'my_objects.dart';
-import 'profile_screen.dart';
+
+import 'itemListScreen/itemListScreen.dart';
 import 'screen.dart';
 
 
@@ -33,7 +33,7 @@ void initState() {
           index: currentIndex,
           children: <Widget>[
             AddObjectScreen(),
-            MyObjects(),
+            ItemListScreen(),
        //     ProfileScreen(),
             Neumorphism()
             // Navigator(
