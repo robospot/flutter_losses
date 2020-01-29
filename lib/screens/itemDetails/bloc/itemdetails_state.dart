@@ -16,8 +16,16 @@ class ItemDetailsLoading extends ItemdetailsState {
 }
 
 class ItemDetailsLoaded extends ItemdetailsState {
+  final bool isEditing;
   final Item item;
-  ItemDetailsLoaded({this.item}) : super();
+  ItemDetailsLoaded({this.item, this.isEditing}) : super();
+  @override
+  List<Object> get props => [item];
+}
+
+class ItemDetailsChanging extends ItemdetailsState {
+  final Item item;
+  ItemDetailsChanging({this.item}) : super();
   @override
   List<Object> get props => [item];
 }

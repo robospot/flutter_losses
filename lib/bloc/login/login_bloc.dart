@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_losses/bloc/login/bloc.dart';
 import 'package:flutter_losses/utils/validators.dart';
 import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
+
 
 import '../../utils/user_repository.dart';
 
@@ -19,20 +19,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   LoginState get initialState => LoginState.empty();
 
-  @override
-  Stream<LoginState> transformEvents(
-    Stream<LoginEvent> events,
-    Stream<LoginState> Function(LoginEvent event) next,
-  ) {
-    final observableStream = events as Observable<LoginEvent>;
-    final nonDebounceStream = observableStream.where((event) {
-      return (event is! EmailChanged && event is! PasswordChanged);
-    });
-    final debounceStream = observableStream.where((event) {
-      return (event is EmailChanged || event is PasswordChanged);
-    }).debounceTime(Duration(milliseconds: 300));
-    return super.transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
-  }
+  // @override
+  // Stream<LoginState> transformEvents(
+  //   Stream<LoginEvent> events,
+  //   Stream<LoginState> Function(LoginEvent event) next,
+  // ) {
+  //   // final observableStream = events as Observable<LoginEvent>;
+  //   final nonDebounceStream = observableStream.where((event) {
+  //     return (event is! EmailChanged && event is! PasswordChanged);
+  //   });
+  //   final debounceStream = observableStream.where((event) {
+  //     return (event is EmailChanged || event is PasswordChanged);
+  //   }).debounceTime(Duration(milliseconds: 300));
+  //   return super.transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
+  // }
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {

@@ -11,10 +11,10 @@ class Item extends Equatable {
       this.showEmail})
       : super();
 
-  final String itemName;
-  final String itemDescription;
-  final String itemId;
-  final String userId;
+  String itemName;
+  String itemDescription;
+  String itemId;
+  String userId;
   bool showPhone;
   bool showEmail;
 

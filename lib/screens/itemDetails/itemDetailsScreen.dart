@@ -8,6 +8,8 @@ import 'package:flutter_losses/screens/itemDetails/bloc/itemdetails_bloc.dart';
 import 'package:flutter_losses/utils/constants.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import 'widgets/itemOptions.dart';
+
 class ItemDetailsScreen extends StatefulWidget {
   final Item item;
   ItemDetailsScreen({Key key, this.item}) : super(key: key);
@@ -21,6 +23,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemDescriptionController =
       TextEditingController();
+  Item itemDetails;
 
   @override
   void didChangeDependencies() {
@@ -43,67 +46,97 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       // size: 320.0,)
     );
 
-    return Scaffold(body:  Container(child: BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
+    return BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
         builder: (context, state) {
       if ((state is ItemDetailsInitial) || (state is ItemDetailsLoading)) {
         return CircularProgressIndicator();
       }
       if (state is ItemDetailsLoaded) {
-        return Container(
-            margin: EdgeInsets.all(16),
-            child: Form(
-              child: Center(
-                child: ListView(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: itemNameController,
-                      decoration: new InputDecoration(labelText: 'Название'),
-                    ),
-                    TextFormField(
-                      controller: itemDescriptionController,
-                      decoration: new InputDecoration(labelText: 'Описание'),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        itemDetails = state.item;
+        itemNameController.text = itemDetails.itemName;
+        itemDescriptionController.text = itemDetails.itemDescription;
+
+        return Scaffold(
+            appBar: AppBar(
+              title: Text("Вещь"),
+              actions: <Widget>[
+                IconButton(
+                  icon: state.isEditing
+                      ? Icon(Icons.save)
+                      : Icon(Icons.mode_edit),
+                  onPressed: () => changeItemDetails(state, widget.item),
+                )
+              ],
+            ),
+            body: Container(
+                margin: EdgeInsets.all(16),
+                child: Form(
+                  child: Center(
+                    child: ListView(
                       children: <Widget>[
-                        Text("Показывать телефон"),
-                        Switch(
-                          value: state.item.showPhone,
-                          //    onChanged: (bool value) => showPhoneChanged(value),
-                        )
+                        TextFormField(
+                          enabled: state.isEditing ? true : false,
+                          controller: itemNameController,
+                          decoration:
+                              new InputDecoration(labelText: 'Название'),
+                          onChanged: (val) => itemDetails.itemName = val,
+                        ),
+                        TextFormField(
+                          enabled: state.isEditing ? true : false,
+                          controller: itemDescriptionController,
+                          decoration:
+                              new InputDecoration(labelText: 'Описание'),
+                          onChanged: (val) => itemDetails.itemDescription = val,
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: <Widget>[
+                        //     Text("Показывать телефон"),
+                        //     Switch(
+                        //       value: itemDetails.showPhone,
+                        //       onChanged: (bool value) =>
+                        //           showPhoneChanged(value),
+                        //     )
+                        //   ],
+                        // ),
+                        ItemOptions(
+                          title: "Email",
+                          value: itemDetails.showEmail,
+                          visibility: state.isEditing,
+                          callback: (val) {
+                            showEmailChanged(val);
+                          },
+                        ),
+                        ItemOptions(
+                          title: "Телефон",
+                          visibility: state.isEditing,
+                          value: itemDetails.showPhone,
+                          callback: (val) {
+                            showPhoneChanged(val);
+                          },
+                        ),
+
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.only(top: 24, bottom: 8),
+                            width: 200,
+                            child:
+                                //qrFutureBuilder,
+                                CustomPaint(
+                                    size: Size.square(200), painter: qrcode),
+                          ),
+                        ),
+                        Center(child: Text(link)),
+                        RaisedButton(
+                            child: Text("Share"),
+                            onPressed: () => shareObject(qrcode))
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text("Показывать email"),
-                        Switch(
-                          value: state.item.showEmail,
-                          //onChanged: (bool value) => showEmailChanged(value),
-                        )
-                      ],
-                    ),
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 24, bottom: 8),
-                        width: 200,
-                        child:
-                            //qrFutureBuilder,
-                            CustomPaint(
-                                size: Size.square(200), painter: qrcode),
-                      ),
-                    ),
-                    Center(child: Text(link)),
-                    RaisedButton(
-                        child: Text("Share"),
-                        onPressed: () => shareObject(qrcode))
-                  ],
-                ),
-              ),
-            ));
+                  ),
+                )));
       }
       return Container();
-    })));
+    });
   }
 
   shareObject(QrPainter qrcode) async {
@@ -115,5 +148,31 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       'image/png',
       text: 'Персональный QR код',
     );
+  }
+
+  changeItemDetails(ItemdetailsState state, Item item) {
+    if ((state as ItemDetailsLoaded).isEditing) {
+      // itemDetailsBloc.add(ChangeItemDetails(isEditing: false, item: item));
+      itemDetailsBloc.add(SaveItemDetails(item: item));
+    } else {
+      // itemDetailsBloc.add(SaveItemDetails(item: item));
+      itemDetailsBloc.add(ChangeItemDetails(isEditing: true, item: item));
+    }
+  }
+
+  showPhoneChanged(bool value) {
+    // setState(() {
+    // itemDetails.showPhone = value;
+    itemDetails.showPhone = value;
+    itemDetailsBloc.add(UpdateItemDetails(item: itemDetails));
+    // });
+  }
+
+  showEmailChanged(bool value) {
+    // setState(() {
+    //   itemDetails.showEmail = value;
+    // });
+    itemDetails.showEmail = value;
+    itemDetailsBloc.add(UpdateItemDetails(item: itemDetails));
   }
 }

@@ -17,17 +17,17 @@ void main() {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthBloc>(
-        builder: (BuildContext context) =>
+        create: (BuildContext context) =>
             AuthBloc(userRepository: userRepository)..add(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
-          builder: (BuildContext context) =>
+          create: (BuildContext context) =>
               LoginBloc(userRepository: userRepository)),
-      BlocProvider<UserBloc>(builder: (BuildContext context) => UserBloc()),
+      BlocProvider<UserBloc>(create: (BuildContext context) => UserBloc()),
       BlocProvider<ItemlistBloc>(
-          builder: (BuildContext context) => ItemlistBloc(context: context)),
+          create: (BuildContext context) => ItemlistBloc(context: context)),
       BlocProvider<ItemdetailsBloc>(
-          builder: (BuildContext context) => ItemdetailsBloc()),
+          create: (BuildContext context) => ItemdetailsBloc()),
     ],
     child: App(userRepository: userRepository),
   ));
