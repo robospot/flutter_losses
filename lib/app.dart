@@ -26,13 +26,24 @@ class App extends StatelessWidget {
         title: 'Losses',
         theme: ThemeData(
             primarySwatch: Colors.blue,
-            backgroundColor: Color.lerp(Colors.grey[200], Colors.black, 0.005),
-            scaffoldBackgroundColor: Colors.grey[200],
+            // backgroundColor: Color.lerp(Color(0xffEBF3FA), Color(0xffE5F0F9), 0.005), Color(0xFFF1F3F6)
+            // scaffoldBackgroundColor: Color.lerp(Color(0xffEBF3FA), Color(0xffE5F0F9), 0.005),
+            scaffoldBackgroundColor: Color(0xFFF1F3F6),
             dialogBackgroundColor: Colors.grey[300],
+            appBarTheme: AppBarTheme(
+              color: Color(0xFFF1F3F6),
+              elevation: 0,
+            ),
             // buttonTheme: ButtonThemeData(
             //     buttonColor: Color(0xFFFF7F5D),
             //     textTheme: ButtonTextTheme.accent, ),
-            accentColor: Colors.white),
+            //primaryTextTheme: TextTheme(subtitle: )
+            primaryTextTheme: TextTheme(
+                headline6: TextStyle(
+                    color: Color(0xFF4D70A6),
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold)),
+            primaryIconTheme: IconThemeData(color: Colors.blueGrey[500])),
         //            home: BlocBuilder<AuthBloc, AuthState>(
         //     builder: (context, state) {
         //   if (state is Uninitialized) {

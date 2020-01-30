@@ -4,7 +4,9 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_losses/bloc/auth/bloc.dart';
 import 'package:flutter_losses/models/item.dart';
+import 'package:flutter_losses/models/user.dart';
 import 'package:flutter_losses/screens/itemDetails/bloc/itemdetails_bloc.dart';
 import 'package:flutter_losses/utils/constants.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -21,6 +23,7 @@ class ItemDetailsScreen extends StatefulWidget {
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   ItemdetailsBloc itemDetailsBloc;
+  User user;
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemDescriptionController =
       TextEditingController();
@@ -32,6 +35,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
     itemDetailsBloc = BlocProvider.of<ItemdetailsBloc>(context);
     itemDetailsBloc.add(GetItemDetails(item: widget.item));
+    user = ((BlocProvider.of<AuthBloc>(context).state) as Authenticated).user;
+    user.email ??= "";
+    user.phone ??= "";
   }
 
   @override
@@ -42,7 +48,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     QrPainter qrcode = QrPainter(
       data: link,
       version: QrVersions.auto,
-      color: Color(0xff1a5441),
+      color: Color(0xFF4D70A6),
       emptyColor: Color(0xffeafcf6),
       // size: 320.0,)
     );
@@ -60,8 +66,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         itemDetails.showEmail ??= false;
 
         return Scaffold(
-            appBar: AppBar(
-              title: Text("Вещь"),
+            appBar:  PreferredSize(
+          preferredSize: Size.fromHeight(40.0), child: AppBar(
+              // title: Text("Вещь"),
               actions: <Widget>[
                 IconButton(
                   icon: state.isEditing
@@ -70,55 +77,24 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   onPressed: () => changeItemDetails(state, widget.item),
                 )
               ],
-            ),
+            )),
             body: Container(
-                margin: EdgeInsets.all(16),
+                margin: EdgeInsets.symmetric(horizontal: 16),
                 child: Form(
                   child: Center(
                     child: ListView(
                       children: <Widget>[
                         TextFormField(
+                          style: TextStyle(
+                              color: Color(0xFF4D70A6),
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold),
                           enabled: state.isEditing ? true : false,
                           controller: itemNameController,
-                          decoration:
-                              new InputDecoration(labelText: 'Название'),
+                          decoration: InputDecoration(contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none, hintText: "Название"),
                           onChanged: (val) => itemDetails.itemName = val,
                         ),
-                        TextFormField(
-                          enabled: state.isEditing ? true : false,
-                          controller: itemDescriptionController,
-                          decoration:
-                              new InputDecoration(labelText: 'Описание'),
-                          onChanged: (val) => itemDetails.itemDescription = val,
-                        ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: <Widget>[
-                        //     Text("Показывать телефон"),
-                        //     Switch(
-                        //       value: itemDetails.showPhone,
-                        //       onChanged: (bool value) =>
-                        //           showPhoneChanged(value),
-                        //     )
-                        //   ],
-                        // ),
-                        ItemOptions(
-                          title: "Email",
-                          value: itemDetails.showEmail,
-                          isEditing: state.isEditing,
-                          callback: (val) {
-                            showEmailChanged(val);
-                          },
-                        ),
-                        ItemOptions(
-                          title: "Телефон",
-                          isEditing: state.isEditing,
-                          value: itemDetails.showPhone,
-                          callback: (val) {
-                            showPhoneChanged(val);
-                          },
-                        ),
-
                         Center(
                           child: Container(
                             padding: EdgeInsets.only(top: 24, bottom: 8),
@@ -130,7 +106,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           ),
                         ),
                         Center(
-                            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(link),
                             IconButton(
@@ -142,7 +119,32 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         )),
                         RaisedButton(
                             child: Text("Share"),
-                            onPressed: () => shareObject(qrcode))
+                            onPressed: () => shareObject(qrcode)),
+                        TextFormField(
+                          enabled: state.isEditing ? true : false,
+                          controller: itemDescriptionController,
+                          decoration:
+                              new InputDecoration(labelText: 'Описание'),
+                          onChanged: (val) => itemDetails.itemDescription = val,
+                        ),
+                        ItemOptions(
+                          title: "Email",
+                          value: itemDetails.showEmail,
+                          contact: user.email,
+                          isEditing: state.isEditing,
+                          callback: (val) {
+                            showEmailChanged(val);
+                          },
+                        ),
+                        ItemOptions(
+                          title: "Телефон",
+                          contact: user.phone,
+                          isEditing: state.isEditing,
+                          value: itemDetails.showPhone,
+                          callback: (val) {
+                            showPhoneChanged(val);
+                          },
+                        ),
                       ],
                     ),
                   ),

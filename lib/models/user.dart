@@ -6,11 +6,13 @@ class User extends Equatable {
   User({this.displayName, this.uid, this.phone, this.email, this.photoUrl})
       : super();
 
-  final String displayName;
-  final String email;
-  final String phone;
-  final String uid;
-  final String photoUrl;
+   String displayName;
+   String email;
+   String phone;
+   String uid;
+   String photoUrl;
+
+  
 
   @override
   List<Object> get props => [];
