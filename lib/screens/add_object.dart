@@ -6,6 +6,8 @@ import 'package:flutter_losses/bloc/auth/bloc.dart';
 import 'package:flutter_losses/utils/firebase_db.dart';
 import 'package:flutter_losses/models/item.dart';
 
+import 'itemListScreen/bloc/itemlist_bloc.dart';
+
 class AddObjectScreen extends StatefulWidget {
   AddObjectScreen({Key key}) : super(key: key);
 
@@ -68,21 +70,22 @@ class _AddObjectScreenState extends State<AddObjectScreen> {
         );
   }
 
-  createObject(GlobalKey<FormState> _formKey, BuildContext context) {
+  createObject(GlobalKey<FormState> _formKey, BuildContext context) async{
     // UserRepository _userRepository = UserRepository();
     // _formkey.currentState.save();
     if (_formKey.currentState.validate()) {
       FirebaseService db = FirebaseService();
-
-      var rng = new Random();
+      
+      // var rng = new Random();
       Item item = Item(
-          itemId: rng.nextInt(10000).toString(),
+          itemId: await db.getItemMaxId(),
           userId: ((BlocProvider.of<AuthBloc>(context).state) as Authenticated)
               .user
               .uid,
           itemName: nameController.text,
           itemDescription: descriptionController.text);
       db.createItem(item);
+      BlocProvider.of<ItemlistBloc>(context).add(GetitemList());
     }
 
     // _userRepository.addObject(objectData);

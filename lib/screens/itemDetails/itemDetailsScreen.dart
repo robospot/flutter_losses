@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_losses/models/item.dart';
 import 'package:flutter_losses/screens/itemDetails/bloc/itemdetails_bloc.dart';
@@ -55,6 +56,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         itemDetails = state.item;
         itemNameController.text = itemDetails.itemName;
         itemDescriptionController.text = itemDetails.itemDescription;
+        itemDetails.showPhone ??= false;
+        itemDetails.showEmail ??= false;
 
         return Scaffold(
             appBar: AppBar(
@@ -102,14 +105,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         ItemOptions(
                           title: "Email",
                           value: itemDetails.showEmail,
-                          visibility: state.isEditing,
+                          isEditing: state.isEditing,
                           callback: (val) {
                             showEmailChanged(val);
                           },
                         ),
                         ItemOptions(
                           title: "Телефон",
-                          visibility: state.isEditing,
+                          isEditing: state.isEditing,
                           value: itemDetails.showPhone,
                           callback: (val) {
                             showPhoneChanged(val);
@@ -126,7 +129,17 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                     size: Size.square(200), painter: qrcode),
                           ),
                         ),
-                        Center(child: Text(link)),
+                        Center(
+                            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(link),
+                            IconButton(
+                              icon: Icon(Icons.content_copy),
+                              onPressed: () => Clipboard.setData(
+                                  new ClipboardData(text: link)),
+                            )
+                          ],
+                        )),
                         RaisedButton(
                             child: Text("Share"),
                             onPressed: () => shareObject(qrcode))

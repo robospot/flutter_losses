@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/auth/bloc.dart';
 import 'models/item.dart';
+import 'screens/add_object.dart';
 import 'screens/itemDetails/itemDetailsScreen.dart';
 import 'utils/user_repository.dart';
 import 'screens/home_screen.dart';
@@ -69,7 +70,8 @@ class App extends StatelessWidget {
             return ItemDetailsScreen(
               item: item,
             );
-          }
+          },
+          '/addItem': (context) => AddObjectScreen()
         }
         // routes: {
         //   '/': (context) => BlocBuilder<AuthBloc, AuthState>(
