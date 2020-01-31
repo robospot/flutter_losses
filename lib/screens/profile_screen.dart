@@ -12,9 +12,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController userName = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController phone = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   UserBloc userBloc;
   final _formKey = GlobalKey<FormState>();
   User user = User();
@@ -25,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     userBloc = BlocProvider.of<UserBloc>(context);
     userBloc.add(GetUserProfile());
+
   }
 
   @override
@@ -46,23 +47,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return CircularProgressIndicator();
               }
               if (state is UserLoaded) {
-                userName.text = state.user.displayName;
-                email.text = state.user.email;
-                phone.text = state.user.phone;
+                user = state.user;
+                userNameController.text = state.user.displayName;
+                emailController.text = state.user.email ?? "";
+                phoneController.text = state.user.phone ?? "";
                 return Form(
                     key: _formKey,
                     child: ListView(
                       children: <Widget>[
                         TextFormField(
-                          controller: userName,
+                          controller: userNameController,
                           decoration: InputDecoration(labelText: "Имя"),
                         ),
                         TextFormField(
-                          controller: email,
+                          controller: emailController,
                           decoration: InputDecoration(labelText: "email"),
                         ),
                         TextFormField(
-                          controller: phone,
+                          controller: phoneController,
                           decoration: InputDecoration(labelText: "Телефон"),
                         ),
                         RaisedButton(
@@ -78,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   onFormSubmitted(User currentUser) {
     if (_formKey.currentState.validate()) {
-      user = User(displayName: userName.text, email: email.text, phone: phone.text, uid: currentUser.uid);
+      user = User(displayName: userNameController.text, email: emailController.text, phone: phoneController.text, uid: currentUser.uid);
       userBloc.add(UpdateUserProfile(user: user));
     //   Scaffold.of(context)
     //       .showSnackBar(SnackBar(content: Text('Processing Data')));

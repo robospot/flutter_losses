@@ -9,6 +9,7 @@ import 'package:flutter_losses/models/item.dart';
 import 'package:flutter_losses/models/user.dart';
 import 'package:flutter_losses/screens/itemDetails/bloc/itemdetails_bloc.dart';
 import 'package:flutter_losses/utils/constants.dart';
+import 'package:neumorphic/neumorphic.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'widgets/itemOptions.dart';
@@ -48,7 +49,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     QrPainter qrcode = QrPainter(
       data: link,
       version: QrVersions.auto,
-      color: Color(0xFF4D70A6),
+      color: Color(0xFF0D1B40),
       emptyColor: Color(0xffeafcf6),
       // size: 320.0,)
     );
@@ -66,33 +67,78 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         itemDetails.showEmail ??= false;
 
         return Scaffold(
-            appBar:  PreferredSize(
-          preferredSize: Size.fromHeight(40.0), child: AppBar(
-              // title: Text("Вещь"),
-              actions: <Widget>[
-                IconButton(
-                  icon: state.isEditing
-                      ? Icon(Icons.save)
-                      : Icon(Icons.mode_edit),
-                  onPressed: () => changeItemDetails(state, widget.item),
-                )
-              ],
-            )),
+            // appBar: PreferredSize(
+            //     preferredSize: Size.fromHeight(40.0),
+            //     child: AppBar(
+            //       // title: Text("Вещь"),
+            //       actions: <Widget>[
+            //         Container(
+            //           // padding: EdgeInsets.all(16),
+            //           // height: 40,
+            //           child: NeumorphicButton(
+            //             child: state.isEditing
+            //                 ? Icon(
+            //                     Icons.save,
+
+            //                   )
+            //                 : Icon(Icons.mode_edit),
+            //             onPressed: () => changeItemDetails(state, widget.item),
+            //           ),
+            //         )
+            //         // IconButton(
+            //         //   icon: state.isEditing
+            //         //       ? Icon(Icons.save)
+            //         //       : Icon(Icons.mode_edit),
+            //         //   onPressed: () => changeItemDetails(state, widget.item),
+            //         // )
+            //       ],
+            //     )),
+
             body: Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Form(
                   child: Center(
                     child: ListView(
                       children: <Widget>[
+                        // Container(
+                        //   height: 20,
+                        //   child: NeumorphicButton(
+                        //     child: state.isEditing
+                        //         ? Icon(Icons.save)
+                        //         : Icon(Icons.mode_edit),
+                        //     onPressed: () =>
+                        //         changeItemDetails(state, widget.item),
+                        //   ),
+                        // ),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            NeumorphicButton(
+                                child: Icon(
+                                  Icons.arrow_back,
+                                ),
+                                onPressed: () => Navigator.of(context).pop()),
+                            NeumorphicButton(
+                              child: state.isEditing
+                                  ? Icon(
+                                      Icons.save,
+                                    )
+                                  : Icon(Icons.mode_edit),
+                              onPressed: () =>
+                                  changeItemDetails(state, widget.item),
+                            ),
+                          ],
+                        ),
                         TextFormField(
                           style: TextStyle(
-                              color: Color(0xFF4D70A6),
+                              color: Color(0xFF0D1B40),
                               fontSize: 26,
                               fontWeight: FontWeight.bold),
                           enabled: state.isEditing ? true : false,
                           controller: itemNameController,
-                          decoration: InputDecoration(contentPadding: EdgeInsets.zero,
-                              border: InputBorder.none, hintText: "Название"),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              hintText: "Название"),
                           onChanged: (val) => itemDetails.itemName = val,
                         ),
                         Center(
@@ -157,10 +203,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   shareObject(QrPainter qrcode) async {
     final ByteData bytes = await qrcode.toImageData(200);
     await Share.file(
-      'esys image',
-      'esys.png',
+      'qr image',
+      'qr.png',
       bytes.buffer.asUint8List(),
-      'image/png',
+      'qr/png',
       text: 'Персональный QR код',
     );
   }

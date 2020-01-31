@@ -5,6 +5,7 @@ import 'package:flutter_losses/utils/firebase_notification_handler.dart';
 import 'add_object.dart';
 
 import 'itemListScreen/itemListScreen.dart';
+import 'profile_screen.dart';
 import 'screen.dart';
 
 
@@ -34,8 +35,8 @@ void initState() {
           children: <Widget>[
             AddObjectScreen(),
             ItemListScreen(),
-       //     ProfileScreen(),
-            Neumorphism()
+            ProfileScreen(),
+            // Neumorphism()
             // Navigator(
             //   key: navigatorKey,
             //   onGenerateRoute: (route) =>
