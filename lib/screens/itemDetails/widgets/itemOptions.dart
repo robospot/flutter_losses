@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:custom_switch/custom_switch.dart';
 
 class ItemOptions extends StatefulWidget {
   final String title;
@@ -45,7 +46,17 @@ class _ItemOptionsState extends State<ItemOptions> {
                       ),
                       // ),
                       widget.isEditing
-                          ? Switch(
+                          ? 
+                        //   Container(
+                        //   child: CustomSwitch(
+                        //     activeColor: Color(0xFFF1F3F6),
+                        //     value: widget.value,
+                        //     onChanged: (bool value) => widget.callback(value),
+                        //   ),
+                        // )
+                         
+
+                          Switch(
                               value: widget.value,
                               onChanged: (bool value) => widget.callback(value),
                             )

@@ -110,25 +110,33 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         //         changeItemDetails(state, widget.item),
                         //   ),
                         // ),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            NeumorphicButton(
-                                child: Icon(
-                                  Icons.arrow_back,
-                                ),
-                                onPressed: () => Navigator.of(context).pop()),
-                            NeumorphicButton(
-                              child: state.isEditing
-                                  ? Icon(
-                                      Icons.save,
-                                    )
-                                  : Icon(Icons.mode_edit),
-                              onPressed: () =>
-                                  changeItemDetails(state, widget.item),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              NeumorphicButton(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop()),
+                              NeumorphicButton(
+                                child: state.isEditing
+                                    ? Icon(
+                                        Icons.save,
+                                      )
+                                    : Icon(Icons.mode_edit),
+                                onPressed: () =>
+                                    changeItemDetails(state, widget.item),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8),
                         ),
                         TextFormField(
+                          maxLines: 2,
                           style: TextStyle(
                               color: Color(0xFF0D1B40),
                               fontSize: 26,
@@ -141,21 +149,58 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               hintText: "Название"),
                           onChanged: (val) => itemDetails.itemName = val,
                         ),
-                        Center(
-                          child: Container(
-                            padding: EdgeInsets.only(top: 24, bottom: 8),
-                            width: 200,
-                            child:
-                                //qrFutureBuilder,
-                                CustomPaint(
-                                    size: Size.square(200), painter: qrcode),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Neumorphic(
+                            status: NeumorphicStatus.convex,
+                            bevel: 10,
+                            decoration: NeumorphicDecoration(
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: CustomPaint(
+                                    size: Size.square(250), painter: qrcode),
+                              ),
+                            ),
                           ),
                         ),
+                        // Center(
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(16.0),
+                        //         child: CustomPaint(
+                        //             size: Size.square(250), painter: qrcode),
+                        //       ),
+                        //     ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(16.0),
+                        //   child: Center(
+                        //     child: Neumorphic(margin: EdgeInsets.all(32),
+
+                        //       // bevel: 12,
+                        //         child: Container(
+                        //       // padding: EdgeInsets.only(top: 24, bottom: 8),
+                        //       // width: 200,
+                        //       child:
+                        //           //qrFutureBuilder,
+                        //           CustomPaint(
+                        //               size: Size.square(250), painter: qrcode),
+                        //     )),
+                        //   ),
+                        // ),
                         Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(link),
+                            // Container(height: 32, width: 32,
+                            //   child: NeumorphicButton(
+                            //     child: Icon(Icons.content_copy, size: 8,),
+                            //     onPressed: () => Clipboard.setData(
+                            //         new ClipboardData(text: link)),
+                            //   ),
+                            // ),
+
                             IconButton(
                               icon: Icon(Icons.content_copy),
                               onPressed: () => Clipboard.setData(
@@ -163,9 +208,17 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                             )
                           ],
                         )),
-                        RaisedButton(
-                            child: Text("Share"),
-                            onPressed: () => shareObject(qrcode)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          child: NeumorphicButton(
+                            child: Text(
+                              "Share",
+                              textAlign: TextAlign.center,
+                            ),
+                            onPressed: () => shareObject(qrcode),
+                          ),
+                        ),
+
                         TextFormField(
                           enabled: state.isEditing ? true : false,
                           controller: itemDescriptionController,
